@@ -29,16 +29,9 @@
     </PropertyGroup>
     <ItemGroup>
         <!-- Files to compile -->
-        <Compile Include="src\Core\Config.cs" />
-        <Compile Include="src\Properties\AssemblyInfo.cs" />
-        <Compile Include="src\Main.cs" />
-        <Compile Include="src\ModInfo.cs" />
+        <Compile Include="src\**\*.cs" />
         <!-- FContent Files -->
-        <None Include="libs\0Harmony.dll" />
-        <None Include="libs\assembly_valheim.dll" />
-        <None Include="libs\BepInEx.dll" />
-        <None Include="libs\UnityEngine.CoreModule.dll" />
-        <None Include="libs\UnityEngine.dll" />
+        <None Include="libs\*.dll" />
         <!-- References -->
         <Reference Include="0Harmony">
             <SpecificVersion>False</SpecificVersion>
