@@ -5,7 +5,7 @@ using HotPins;
 [assembly: AssemblyTitle(ModInfo.MODNAME)]
 [assembly: AssemblyCompany(ModInfo.AUTHOR)]
 [assembly: AssemblyVersion(ModInfo.VERSION)]
-[assembly: AssemblyDescription("Modification for Valheim, which adds hotkeys to create pins")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyDescription(ModInfo.DESCRIPTION)]
+[assembly: AssemblyCopyright("Copyright ©  2026")]
 
 [assembly: ComVisible(false)]
