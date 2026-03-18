@@ -48,9 +48,19 @@
             <HintPath>libs\BepInEx.dll</HintPath>
             <Private>False</Private>
         </Reference>
+        <Reference Include="Splatform">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>libs\Splatform.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
         <Reference Include="UnityEngine.CoreModule">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyMopdule">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>libs\UnityEngine.InputLegacyModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine">
