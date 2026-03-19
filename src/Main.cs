@@ -2,6 +2,7 @@
 using BepInEx.Configuration;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using HotPins.Core;
 
@@ -9,7 +10,7 @@ namespace HotPins {
     [BepInPlugin(ModInfo.GUID, ModInfo.MODNAME, ModInfo.VERSION)]
     internal class Main : BaseUnityPlugin {
         /* General settings */
-        private static ConfigEntry<KeyCode> _main_key;
+        private static ConfigEntry<string> _hotkey;
 
         /* Dungeon names */
         private static ConfigEntry<string> _burial_chamber_name;
@@ -56,11 +57,11 @@ namespace HotPins {
             harmony.PatchAll();
 
             /* Bind config fields */
-            _main_key = Config.Bind(
+            _hotkey = Config.Bind(
                 "General",
-                "Key",
-                KeyCode.G,
-                "A key to auto mark pins on the map"
+                "Hotkey",
+                "<Keyboard>/g",
+                "A hotkey to auto mark pins on the map"
             );
 
             /* Dungeon names */
@@ -276,36 +277,41 @@ namespace HotPins {
                 { _cloudberry_bush_name, Minimap.PinType.Icon3 },
             };
             _sdistance = new Dictionary<ConfigEntry<string>, uint> {
-                { _burial_chamber_name, 15 * 15 },
-                { _troll_cave_name, 15 * 15 },
-                { _sunken_crypt_name, 15 * 15 },
-                { _frozen_cave_name, 20 * 20 },
+                { _burial_chamber_name, 20 * 20 },
+                { _troll_cave_name, 20 * 20 },
+                { _sunken_crypt_name, 20 * 20 },
+                { _frozen_cave_name, 25 * 25 },
                 { _fuling_village_name, 50 * 50 },
                 { _viking_graveyard_name, 20 * 20 },
-                { _oak_name, 15 * 15 },
+                { _oak_name, 20 * 20 },
                 { _copper_ore_name, 20 * 20 },
                 { _tin_ore_name, 10 * 10 },
                 { _guck_name, 15 * 15 },
                 { _obsidian_name, 10 * 10 },
                 { _silver_ore_name, 15 * 15 },
-                { _tar_pit_name, 30 * 30 },
-                { _leviathan_name, 70 * 70 },
-                { _dandelion_name, 5 * 5 },
-                { _raspberry_bush_name, 5 * 5 },
-                { _mushroom_name, 5 * 5 },
-                { _thistle_name, 5 * 5 },
-                { _blueberry_bush_name, 5 * 5 },
-                { _carrot_seeds_name, 5 * 5 },
-                { _turnip_seeds_name, 5 * 5 },
-                { _dragon_egg_name, 10 * 10 },
-                { _cloudberry_bush_name, 5 * 5 },
+                { _tar_pit_name, 50 * 50 },
+                { _leviathan_name, 75 * 75 },
+                { _dandelion_name, 10 * 10 },
+                { _raspberry_bush_name, 10 * 10 },
+                { _mushroom_name, 10 * 10 },
+                { _thistle_name, 10 * 10 },
+                { _blueberry_bush_name, 10 * 10 },
+                { _carrot_seeds_name, 10 * 10 },
+                { _turnip_seeds_name, 10 * 10 },
+                { _dragon_egg_name, 15 * 15 },
+                { _cloudberry_bush_name, 10 * 10 },
             };
+
+            /* Bind the action to the hotkey */
+            InputAction action = new InputAction(
+                type: InputActionType.Button,
+                binding: _hotkey.Value
+            );
+            action.canceled += _ => Execute();
+            action.Enable();
         }
 
-        private void Update() {
-            /* If the main key is not pressed, exit the method */
-            if (!Input.GetKeyDown(_main_key.Value)) return;
-
+        private void Execute() {
             void TryAddPin(GameObject obj) {
                 /* Try to get the name from the dictionary */
                 ConfigEntry<string> name;
