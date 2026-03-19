@@ -51,6 +51,10 @@ namespace HotPins {
         /* Dictionary to store 'pin name -> specific distance' pairs */
         private static Dictionary<ConfigEntry<string>, uint> _sdistance;
 
+        /* Actions */
+        public static InputAction mainAction;
+        public static InputAction filterAction;
+
         private void Awake() {
             /* Patch all the patches */
             Harmony harmony = new Harmony(ModInfo.GUID);
@@ -302,13 +306,33 @@ namespace HotPins {
                 { _cloudberry_bush_name, 10 * 10 },
             };
 
-            /* Bind the action to the hotkey */
-            InputAction action = new InputAction(
+            /* Bind the main action to the hotkey */
+            mainAction = new InputAction(
                 type: InputActionType.Button,
                 binding: _hotkey.Value
             );
-            action.canceled += _ => Execute();
-            action.Enable();
+            mainAction.canceled += _ => Execute();
+            mainAction.Enable();
+
+            /* Bind the filter action to the hotkey */
+            filterAction = new InputAction(
+                type: InputActionType.Button,
+                binding: "<Keyboard>/f"
+            );
+            filterAction.canceled += _ => {
+                /* If we are already filtering */
+                if (Filter.isFiltering) return;
+
+                /* Reset the user input */
+                Filter.ResetUserInput();
+
+                /* Check for large map in open */
+                if (Minimap.IsOpen())
+                    Keyboard.current.onTextInput += Filter.GetUserInput;
+
+                /* Update the feild */
+                Filter.isFiltering = true;
+            };
         }
 
         private void Execute() {

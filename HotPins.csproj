@@ -58,9 +58,19 @@
             <HintPath>libs\Unity.InputSystem.dll</HintPath>
             <Private>False</Private>
         </Reference>
+        <Reference Include="Unity.TextMeshPro">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>libs\Unity.TextMeshPro.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
         <Reference Include="UnityEngine.CoreModule">
             <SpecificVersion>False</SpecificVersion>
             <HintPath>libs\UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+            <SpecificVersion>False</SpecificVersion>
+            <HintPath>libs\UnityEngine.UI.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine">
