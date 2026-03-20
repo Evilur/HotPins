@@ -10,9 +10,12 @@ namespace HotPins.Patch {
             AccessTools.Method(typeof(Minimap), "DestroyPinMarker");
 
         private static void Postfix(ref List<Minimap.PinData> ___m_pins) {
-            /* Delete all filtered pins */
+            /* If we has not the filter, skip this patch */
+            if (!Filter.HasFilter()) return;
+
+            /* Destroy all filtered pins */
             foreach (Minimap.PinData pin in ___m_pins)
-                if (Filter.IsFiltered(pin))
+                if (pin.m_uiElement != null && Filter.IsFiltered(pin))
                     _destroyPinMarker.Invoke(Minimap.instance,
                                              new object[] { pin });
         }

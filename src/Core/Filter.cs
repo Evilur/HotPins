@@ -44,9 +44,9 @@ namespace HotPins.Core {
 
         public static void SetText(TextMeshProUGUI text) => _text = text;
 
-        public static bool IsFiltered(Minimap.PinData pin) {
-            if (_text.text == null) return false;
-            return !pin.m_name.ToLower().Contains(_text.text.ToLower());
-        }
+        public static bool HasFilter() => _text.text != null;
+
+        public static bool IsFiltered(Minimap.PinData pin) =>
+            !pin.m_name.ToLower().Contains(_text.text.ToLower());
     }
 }
