@@ -311,7 +311,7 @@ namespace HotPins {
                 type: InputActionType.Button,
                 binding: _hotkey.Value
             );
-            mainAction.canceled += _ => Execute();
+            mainAction.started += _ => Execute();
             mainAction.Enable();
 
             /* Bind the filter action to the hotkey */
@@ -319,20 +319,7 @@ namespace HotPins {
                 type: InputActionType.Button,
                 binding: "<Keyboard>/f"
             );
-            filterAction.canceled += _ => {
-                /* If we are already filtering */
-                if (Filter.isFiltering) return;
-
-                /* Reset the user input */
-                Filter.ResetUserInput();
-
-                /* Check for large map in open */
-                if (Minimap.IsOpen())
-                    Keyboard.current.onTextInput += Filter.GetUserInput;
-
-                /* Update the feild */
-                Filter.isFiltering = true;
-            };
+            filterAction.canceled += _ => Filter.Enable();
         }
 
         private void Execute() {

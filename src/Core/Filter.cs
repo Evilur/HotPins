@@ -1,30 +1,29 @@
 using UnityEngine.InputSystem;
 using TMPro;
 using HarmonyLib;
-using UnityEngine;
 using System.Reflection;
 
 namespace HotPins.Core {
     internal static class Filter {
-        public static bool isFiltering = false;
+        private static bool _isFiltering = false;
 
         private static TextMeshProUGUI _text = null;
 
         private static MethodInfo _updatePins =
             AccessTools.Method(typeof(Minimap), "UpdatePins");
 
-        public static void ResetUserInput() {
+        private static void ResetUserInput() {
             _text.text = "";
         }
 
-        public static void GetUserInput(char c) {
+        private static void GetUserInput(char c) {
             /* Check the text for null */
             if (_text == null) return;
 
             /* If there is an Enter char, exit */
             if (c == '\r' || c == '\n') {
                 Keyboard.current.onTextInput -= Filter.GetUserInput;
-                isFiltering = false;
+                _isFiltering = false;
                 return;
             }
 
@@ -42,7 +41,34 @@ namespace HotPins.Core {
             _updatePins.Invoke(Minimap.instance, null);
         }
 
+        public static void Enable() {
+            /* If we are already filtering */
+            if (_isFiltering) return;
+
+            /* Reset the user input */
+            ResetUserInput();
+
+            /* Check for large map in open */
+            if (Minimap.IsOpen()) {
+                /* Add the event handler */
+                Keyboard.current.onTextInput += Filter.GetUserInput;
+
+                /* Update the state */
+                Filter._isFiltering = true;
+            }
+        }
+
+        public static void Disable() {
+            /* Remove the event handler */
+            Keyboard.current.onTextInput -= GetUserInput;
+
+            /* Update the state */
+            _isFiltering = false;
+        }
+
         public static void SetText(TextMeshProUGUI text) => _text = text;
+
+        public static bool IsFiltering() => _isFiltering;
 
         public static bool HasFilter() => _text.text != null;
 

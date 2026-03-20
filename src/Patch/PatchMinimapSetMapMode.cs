@@ -1,5 +1,4 @@
 using HarmonyLib;
-using UnityEngine.InputSystem;
 using HotPins.Core;
 
 namespace HotPins.Patch {
@@ -7,8 +6,7 @@ namespace HotPins.Patch {
     internal static class PatchMinimapSetMapMode {
         private static void Prefix(Minimap.MapMode mode) {
             /* Disable the filter input */
-            Keyboard.current.onTextInput -= Filter.GetUserInput;
-            Filter.isFiltering = false;
+            Filter.Disable();
 
             /* If there is a large map */
             if (mode == Minimap.MapMode.Large) Main.filterAction.Enable();
