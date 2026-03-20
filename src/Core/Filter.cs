@@ -5,12 +5,19 @@ using System.Reflection;
 
 namespace HotPins.Core {
     internal static class Filter {
-        private static bool _isFiltering = false;
+        private static bool _isEnabled = false;
 
         private static TextMeshProUGUI _text = null;
 
         private static MethodInfo _updatePins =
             AccessTools.Method(typeof(Minimap), "UpdatePins");
+
+        private static InputAction _disable = new InputAction(
+                    type: InputActionType.Button,
+                    binding: "<Keyboard>/escape"
+                );
+
+        static Filter() => _disable.started += _ => Disable();
 
         private static void ResetUserInput() {
             _text.text = "";
@@ -23,7 +30,7 @@ namespace HotPins.Core {
             /* If there is an Enter char, exit */
             if (c == '\r' || c == '\n') {
                 Keyboard.current.onTextInput -= Filter.GetUserInput;
-                _isFiltering = false;
+                _isEnabled = false;
                 return;
             }
 
@@ -43,7 +50,7 @@ namespace HotPins.Core {
 
         public static void Enable() {
             /* If we are already filtering */
-            if (_isFiltering) return;
+            if (_isEnabled) return;
 
             /* Reset the user input */
             ResetUserInput();
@@ -54,8 +61,11 @@ namespace HotPins.Core {
                 Keyboard.current.onTextInput += Filter.GetUserInput;
 
                 /* Update the state */
-                Filter._isFiltering = true;
+                Filter._isEnabled = true;
             }
+
+            /* Enable the disabling hotkey */
+            _disable.Enable();
         }
 
         public static void Disable() {
@@ -63,12 +73,15 @@ namespace HotPins.Core {
             Keyboard.current.onTextInput -= GetUserInput;
 
             /* Update the state */
-            _isFiltering = false;
+            _isEnabled = false;
+
+            /* Disable the disabling hotkey */
+            _disable.Disable();
         }
 
         public static void SetText(TextMeshProUGUI text) => _text = text;
 
-        public static bool IsFiltering() => _isFiltering;
+        public static bool IsEnabled() => _isEnabled;
 
         public static bool HasFilter() => _text.text != null;
 
