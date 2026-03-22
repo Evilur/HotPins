@@ -52,17 +52,21 @@ namespace HotPins.Core {
             /* If we are already filtering */
             if (_isEnabled) return;
 
+            /* If the minimap is not opened */
+            if (!Minimap.IsOpen()) return;
+
+            /* If the user is wirting the pin name */
+            if (Minimap.instance.m_nameInput != null &&
+                Minimap.instance.m_nameInput.gameObject.activeSelf) return;
+
             /* Reset the user input */
             ResetUserInput();
 
-            /* Check for large map in open */
-            if (Minimap.IsOpen()) {
-                /* Add the event handler */
-                Keyboard.current.onTextInput += Filter.GetUserInput;
+            /* Add the event handler */
+            Keyboard.current.onTextInput += Filter.GetUserInput;
 
-                /* Update the state */
-                Filter._isEnabled = true;
-            }
+            /* Update the state */
+            _isEnabled = true;
 
             /* Enable the disabling hotkey */
             _disable.Enable();
@@ -85,7 +89,13 @@ namespace HotPins.Core {
 
         public static bool HasFilter() => _text.text != null;
 
-        public static bool IsFiltered(Minimap.PinData pin) =>
-            !pin.m_name.ToLower().Contains(_text.text.ToLower());
+        public static bool IsFiltered(Minimap.PinData pin) {
+            if (pin.m_type != Minimap.PinType.Icon0 &&
+                pin.m_type != Minimap.PinType.Icon1 &&
+                pin.m_type != Minimap.PinType.Icon2 &&
+                pin.m_type != Minimap.PinType.Icon3 &&
+                pin.m_type != Minimap.PinType.Icon4) return false;
+            else return !pin.m_name.ToLower().Contains(_text.text.ToLower());
+        }
     }
 }

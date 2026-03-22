@@ -2,8 +2,8 @@ using HarmonyLib;
 using HotPins.Core;
 
 namespace HotPins.Patch {
-    [HarmonyPatch(typeof(Chat), "HasFocus")]
-    internal static class PatchChatHasFocus {
+    [HarmonyPatch(typeof(Minimap), "InTextInput")]
+    internal static class PatchMinimapInTextInput {
         private static bool Prefix(ref bool __result) {
             /* If the filter input is not enabled, run the main method */
             if (!Filter.IsEnabled()) return true;
