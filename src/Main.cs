@@ -41,15 +41,17 @@ namespace HotPins {
         private static ConfigEntry<string> _dragon_egg_name;
         private static ConfigEntry<string> _cloudberry_bush_name;
 
-        /* Dictionary to store 'obj.name -> pin name' pairs */
-        private static Dictionary<string, ConfigEntry<string>> _names;
+        /* Dictionary to store 'prefab.name -> pin name' pairs */
+        public static Dictionary<string, ConfigEntry<string>> prefabNames;
+
+        /* Dictionary to store 'locationProxy -> pin name' pairs */
+        public static Dictionary<string, ConfigEntry<string>> locationNames;
 
         /* Dictionary to store 'pin name -> pin type' pairs */
-        private static Dictionary<ConfigEntry<string>,
-                                  Minimap.PinType> _types;
+        public static Dictionary<ConfigEntry<string>, Minimap.PinType> types;
 
-        /* Dictionary to store 'pin name -> specific distance' pairs */
-        private static Dictionary<ConfigEntry<string>, uint> _sdistance;
+        /* Dictionary to store 'pin name -> square distance' pairs */
+        public static Dictionary<ConfigEntry<string>, uint> sqrtDistance;
 
         /* Actions */
         public static InputAction mainAction;
@@ -226,36 +228,38 @@ namespace HotPins {
             );
 
             /* Fill dictionaries */
-            _names = new Dictionary<string, ConfigEntry<string>> {
-                { "Crypt2(Clone)", _burial_chamber_name },
-                { "Crypt3(Clone)", _burial_chamber_name },
-                { "Crypt4(Clone)", _burial_chamber_name },
-                { "TrollCave02(Clone)", _troll_cave_name },
-                { "SunkenCrypt4(Clone)", _sunken_crypt_name },
-                { "MountainCave02(Clone)", _frozen_cave_name },
-                { "GoblinCamp2(Clone)", _fuling_village_name },
-                { "ShipSetting01(Clone)", _viking_graveyard_name },
-                { "Oak1(Clone)", _oak_name },
-                { "rock4_copper(Clone)", _copper_ore_name },
-                { "MineRock_Tin(Clone)", _tin_ore_name },
-                { "GuckSack(Clone)", _guck_name },
-                { "MineRock_Obsidian(Clone)", _obsidian_name },
-                { "silvervein(Clone)", _silver_ore_name },
-                { "TarPit1(Clone)", _tar_pit_name },
-                { "TarPit2(Clone)", _tar_pit_name },
-                { "TarPit3(Clone)", _tar_pit_name },
-                { "Leviathan(Clone)", _leviathan_name },
-                { "Pickable_Dandelion(Clone)", _dandelion_name },
-                { "RaspberryBush(Clone)", _raspberry_bush_name },
-                { "Pickable_Mushroom(Clone)", _mushroom_name },
-                { "Pickable_Thistle(Clone)", _thistle_name },
-                { "BlueberryBush(Clone)", _blueberry_bush_name },
-                { "Pickable_SeedCarrot(Clone)", _carrot_seeds_name },
-                { "Pickable_SeedTurnip(Clone)", _turnip_seeds_name },
-                { "Pickable_DragonEgg(Clone)", _dragon_egg_name },
-                { "CloudberryBush(Clone)", _cloudberry_bush_name }
+            prefabNames = new Dictionary<string, ConfigEntry<string>> {
+                { "Oak1", _oak_name },
+                { "rock4_copper", _copper_ore_name },
+                { "MineRock_Tin", _tin_ore_name },
+                { "GuckSack", _guck_name },
+                { "MineRock_Obsidian", _obsidian_name },
+                { "silvervein", _silver_ore_name },
+                { "Leviathan", _leviathan_name },
+                { "Pickable_Dandelion", _dandelion_name },
+                { "RaspberryBush", _raspberry_bush_name },
+                { "Pickable_Mushroom", _mushroom_name },
+                { "Pickable_Thistle", _thistle_name },
+                { "BlueberryBush", _blueberry_bush_name },
+                { "Pickable_SeedCarrot", _carrot_seeds_name },
+                { "Pickable_SeedTurnip", _turnip_seeds_name },
+                { "Pickable_DragonEgg", _dragon_egg_name },
+                { "CloudberryBush", _cloudberry_bush_name }
             };
-            _types = new Dictionary<ConfigEntry<string>, Minimap.PinType> {
+            locationNames = new Dictionary<string, ConfigEntry<string>> {
+                { "Crypt2", _burial_chamber_name },
+                { "Crypt3", _burial_chamber_name },
+                { "Crypt4", _burial_chamber_name },
+                { "TrollCave02", _troll_cave_name },
+                { "SunkenCrypt4", _sunken_crypt_name },
+                { "MountainCave02", _frozen_cave_name },
+                { "GoblinCamp2", _fuling_village_name },
+                { "ShipSetting01", _viking_graveyard_name },
+                { "TarPit1", _tar_pit_name },
+                { "TarPit2", _tar_pit_name },
+                { "TarPit3", _tar_pit_name },
+            };
+            types = new Dictionary<ConfigEntry<string>, Minimap.PinType> {
                 { _burial_chamber_name, Minimap.PinType.Icon2 },
                 { _troll_cave_name, Minimap.PinType.Icon2 },
                 { _sunken_crypt_name, Minimap.PinType.Icon2 },
@@ -280,12 +284,12 @@ namespace HotPins {
                 { _dragon_egg_name, Minimap.PinType.Icon3 },
                 { _cloudberry_bush_name, Minimap.PinType.Icon3 },
             };
-            _sdistance = new Dictionary<ConfigEntry<string>, uint> {
+            sqrtDistance = new Dictionary<ConfigEntry<string>, uint> {
                 { _burial_chamber_name, 20 * 20 },
                 { _troll_cave_name, 20 * 20 },
                 { _sunken_crypt_name, 20 * 20 },
                 { _frozen_cave_name, 25 * 25 },
-                { _fuling_village_name, 50 * 50 },
+                { _fuling_village_name, 150 * 150 },
                 { _viking_graveyard_name, 20 * 20 },
                 { _oak_name, 20 * 20 },
                 { _copper_ore_name, 20 * 20 },
@@ -294,7 +298,7 @@ namespace HotPins {
                 { _obsidian_name, 10 * 10 },
                 { _silver_ore_name, 15 * 15 },
                 { _tar_pit_name, 50 * 50 },
-                { _leviathan_name, 75 * 75 },
+                { _leviathan_name, 150 * 150 },
                 { _dandelion_name, 10 * 10 },
                 { _raspberry_bush_name, 10 * 10 },
                 { _mushroom_name, 10 * 10 },
@@ -311,7 +315,21 @@ namespace HotPins {
                 type: InputActionType.Button,
                 binding: _hotkey.Value
             );
-            mainAction.started += _ => Execute();
+            mainAction.started += _ => {
+                /* Find all markable objects */
+                foreach (Markable markable in FindObjectsByType<Markable>(
+                            FindObjectsInactive.Exclude,
+                            FindObjectsSortMode.None
+                        )) {
+                    /* Check the minimap for null */
+                    if (Minimap.instance == null) return;
+
+                    /* If the player is near the object
+                     * And if there is no such a ping yet */
+                    if (markable.IsPlayerNear() && !markable.HasSuchPin())
+                        markable.MarkPin();
+                }
+            };
             mainAction.Enable();
 
             /* Bind the filter action to the hotkey */
@@ -320,48 +338,6 @@ namespace HotPins {
                 binding: "<Keyboard>/f"
             );
             filterAction.canceled += _ => Filter.Enable();
-        }
-
-        private void Execute() {
-            void TryAddPin(GameObject obj) {
-                /* Try to get the name from the dictionary */
-                ConfigEntry<string> name;
-                if (!_names.TryGetValue(obj.name, out name)) return;
-
-                /* If there is such a name in the dictionary,
-                 * Check for distance away from the player */
-                {
-                    Vector3 player_pos =
-                        Player.m_localPlayer.transform.position;
-                    Vector3 obj_pos = obj.transform.position;
-                    Vector3 delta = player_pos - obj_pos;
-                    if ((delta.x * delta.x + delta.z * delta.z) >
-                        _sdistance.GetValueSafe(name)) return;
-                }
-
-                /* If all is OK, add the pin */
-                Pin.Add(obj.transform.position,
-                        _types.GetValueSafe(name),
-                        name.Value);
-            }
-
-            /* Find all neccecary Location objects */
-            foreach (Pickable obj in FindObjectsByType<Pickable>(
-                        FindObjectsInactive.Exclude,
-                        FindObjectsSortMode.None
-                     )) TryAddPin(obj.gameObject);
-            foreach (Location obj in FindObjectsByType<Location>(
-                        FindObjectsInactive.Exclude,
-                        FindObjectsSortMode.None
-                     )) TryAddPin(obj.gameObject);
-            foreach (Destructible obj in FindObjectsByType<Destructible>(
-                        FindObjectsInactive.Exclude,
-                        FindObjectsSortMode.None
-                     )) TryAddPin(obj.gameObject);
-            foreach (TreeBase obj in FindObjectsByType<TreeBase>(
-                        FindObjectsInactive.Exclude,
-                        FindObjectsSortMode.None
-                     )) TryAddPin(obj.gameObject);
         }
     }
 }
