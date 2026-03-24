@@ -294,7 +294,7 @@ namespace HotPins {
                 { _oak_name, 20 * 20 },
                 { _copper_ore_name, 20 * 20 },
                 { _tin_ore_name, 10 * 10 },
-                { _guck_name, 15 * 15 },
+                { _guck_name, 20 * 20 },
                 { _obsidian_name, 10 * 10 },
                 { _silver_ore_name, 15 * 15 },
                 { _tar_pit_name, 50 * 50 },
